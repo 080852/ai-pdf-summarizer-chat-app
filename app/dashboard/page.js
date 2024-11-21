@@ -5,6 +5,7 @@ function Dashboard({children}) {
         <div>
         {children}
         </div>
+       <h1>Dashboard</h1>
       
     </div>
   )
