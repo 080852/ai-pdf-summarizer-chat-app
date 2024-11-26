@@ -97,9 +97,7 @@ function UploadPdfDialog({children}) {
           </DialogClose>
           <Button onClick={OnUpload}>
             {loading?
-            <Loader2Icon className='animate-spin'/>:'Upload'
-
-}
+            <Loader2Icon className='animate-spin'/>:'Upload'}
             
     </Button>
         </DialogFooter>
