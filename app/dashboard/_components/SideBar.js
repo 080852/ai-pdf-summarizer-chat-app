@@ -6,32 +6,39 @@ import UploadPdfDialog from './UploadPdfDialog'
 
 function SideBar() {
   return (
-    <div className='shadow-md h-screen p-7'>
-        <Image src={'/logo.svg'} alt='logo' width={120} height={100} />
+    <div className='shadow-md h-screen p-7 bg-white rounded-lg'>
+      <Image src={'/logo.svg'} alt='logo' width={120} height={100} className="mx-auto" />
 
-        <div className='mt-6'>
-          <UploadPdfDialog>
-          <Button className="w-full">+ Upload PDF</Button>
-          </UploadPdfDialog>
+      <div className='mt-6'>
+        <UploadPdfDialog>
+          <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
+            + Upload PDF
+          </Button>
+        </UploadPdfDialog>
+      </div>
+
+      <div className='mt-6'>
+        {/* WorkSpace Item */}
+        <div className='flex items-center gap-3 p-3 mt-5 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors'>
+          <Layout className='text-gray-600' />
+          <h2 className='text-lg font-semibold text-gray-800'>Workspace</h2>
         </div>
-        <div className='flex gap-1 items-center p-3 mt-5 
-        hover:bg-slate-100 rounded-lg cursor-pointer'>
-          <Layout/>
-          <h2>WorkSpace</h2>
-          <div className='flex gap-2 items-center p-3 mt-1 
-          hover:bg-slate-100 rounded-lg cursor-pointer'>
-              <Shield/>
-              <h2>Upgrade</h2>
-          </div>
+
+        {/* Upgrade Item */}
+        <div className='flex items-center gap-3 p-3 mt-3 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors'>
+          <Shield className='text-gray-600' />
+          <h2 className='text-lg font-semibold text-gray-800'>Upgrade</h2>
         </div>
-        <div className='absolute bottom-24 w-[90%]'>
+      </div>
+
+      <div className='absolute bottom-24 w-[90%]'>
         <Progress value={33} />
 
-        <p className='text-sm mt-1'>2 out of 3 Pdf Uploaded.</p>
-
-        <p className='text-sm text-gray-400 mt-2'>Upgrade to Upload more PDF.</p>
-
-        </div>
+        <p className='text-sm mt-1 text-gray-700'>2 out of 3 PDFs uploaded.</p>
+        <p className='text-sm text-gray-400 mt-2'>
+          Upgrade to upload more PDFs.
+        </p>
+      </div>
     </div>
   )
 }
