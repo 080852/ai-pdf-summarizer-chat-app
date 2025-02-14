@@ -13,7 +13,7 @@ export const AddFileEntryToDb = mutation({
     storageId: v.string(),
     fileName: v.string(),
     createdBy: v.string(),
-    fileUrl: v.string(),
+    fileUrl: v.string()
   },
   handler: async (ctx, args) => {
     await ctx.db.insert("pdfFiles", {
@@ -38,20 +38,18 @@ export const getFileUrl = mutation({
   },
 });
 
-// Query to get a file record from the database based on fileId
+// Query to get the file record based on the fileId
 export const GetFileRecord = query({
   args: {
     fileId: v.string(),
   },
   handler: async (ctx, args) => {
-    const result = await ctx.db.query("pdfFiles")
+    const fileRecord = await ctx.db.query("pdfFiles")
       .filter((q) => q.eq(q.field("fileId"), args.fileId))
-      .collect();
-
-    if (result.length === 0) {
-      return null; // Return null if no file is found instead of throwing an error
+      .first();
+    if (!fileRecord) {
+      throw new Error(`File with ID ${args.fileId} not found.`);
     }
-
-    return result[0];
+    return fileRecord;
   },
 });

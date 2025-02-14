@@ -26,69 +26,81 @@ function UploadPdfDialog({ children }) {
   const getFileUrl = useMutation(api.fileStorage.getFileUrl);
   const embeddDocument = useAction(api.myAction.ingest);
   const { user } = useUser();
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [fileName, setFileName] = useState(" ");
-  const [open,setOpen]=useState(false);
+  const [fileName, setFileName] = useState("");
+  const [open, setOpen] = useState(false);
 
   const OnFileSelect = (event) => {
-    setFile(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
+
+    if (selectedFile.size > 10 * 1024 * 1024) {
+      alert("File size exceeds the 10MB limit.");
+      return;
+    }
+    if (selectedFile.type !== "application/pdf") {
+      alert("Only PDF files are allowed.");
+      return;
+    }
+    setFile(selectedFile);
   };
 
   const OnUpload = async () => {
+    if (!file) {
+      alert("Please select a file before uploading.");
+      return;
+    }
+    if (!fileName.trim()) {
+      alert("Please provide a name for the file.");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Step 1: Get a short-lived upload URL
       const postUrl = await generateUploadUrl();
 
-      // Step 2: POST the file to the URL
-      const result = await fetch(postUrl, {
+      const uploadResult = await fetch(postUrl, {
         method: "POST",
-        headers: { "Content-Type": file?.type },
+        headers: { "Content-Type": file.type },
         body: file,
       });
 
-      const { storageId } = await result.json(); // Get storageId from the response
-
-      if (!storageId) {
-        throw new Error("No storageId received from the server.");
+      if (!uploadResult.ok) {
+        throw new Error("Upload failed");
       }
 
-      console.log("StorageId:", storageId);
+      const { storageId } = await uploadResult.json();
 
-      // Step 3: Get the fileUrl using the storageId
       const fileUrlResponse = await getFileUrl({ storageId });
-
       if (!fileUrlResponse?.fileUrl) {
-        throw new Error("File URL not found.");
+        throw new Error("Failed to fetch the file URL.");
       }
 
-      const fileUrl = fileUrlResponse.fileUrl; // Ensure fileUrl is returned correctly
-      console.log("FileUrl:", fileUrl);
-
-      // Step 4: Save the file entry with storageId, fileUrl, and fileName to the database
       const fileId = uuid4();
       await addFileEntry({
-        fileId: fileId,
-        storageId: storageId,
-        fileUrl: fileUrl,
-        fileName: fileName ?? "Untitled File",
-        createdBy: user?.primaryEmailAddress?.emailAddress,
+        fileId,
+        storageId,
+        fileUrl: fileUrlResponse.fileUrl,
+        fileName: fileName || "Untitled File",
+        createdBy: user?.primaryEmailAddress?.emailAddress || "Anonymous",
       });
 
-      // API CALL to fetch pdf process data
-      const ApiResp = await axios.get(`/api/pdf-loader?pdfUrl=${fileUrl}`);
-      console.log(ApiResp.data.result);
-
+      const apiResponse = await axios.get(`/api/pdf-loader?pdfUrl=${encodeURIComponent(fileUrlResponse.fileUrl)}`);
       
-      await embeddDocument({
-       splitText: ApiResp.data.result,
-         fileId: fileId
-       });
-      // console.log(embdeddResult);
+      if (!apiResponse.data?.result) {
+        throw new Error("PDF processing failed");
+      }
 
+      await embeddDocument({
+        splitText: apiResponse.data.result,
+        fileId,
+      });
+
+      alert("File successfully uploaded and processed!");
     } catch (error) {
-      console.error("Upload failed:", error.message);
+      console.error("Error during upload:", error);
+      alert(`An error occurred: ${error.message || "Unknown error"}`);
     } finally {
       setLoading(false);
       setOpen(false);
@@ -98,49 +110,39 @@ function UploadPdfDialog({ children }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button onClick={() => setOpen(true)}>+ Upload PDF File</Button>
+        <Button onClick={() => setOpen(true)} className="bg-blue-500 text-white hover:bg-blue-600">
+          + Upload PDF File
+        </Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className="bg-white shadow-lg rounded-md p-6">
         <DialogHeader>
-          <DialogTitle>Upload Pdf File</DialogTitle>
-          <DialogDescription asChild>
-            <div>
-              <h2 className="mt-5">Please Select a file to upload</h2>
-              <div className="flex mt-5 gap-2 p-3 rounded-md border">
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(event) => OnFileSelect(event)}
-                />
-              </div>
-              <div className="mt-2">
-                <label>File Name *</label>
-                <Input
-                  placeholder="File Name"
-                  onChange={(e) => setFileName(e.target.value)}
-                />
-              </div>
-            </div>
-          </DialogDescription>
+          <DialogTitle className="text-xl font-semibold text-gray-800">Upload PDF File</DialogTitle>
         </DialogHeader>
-        <DialogFooter className="sm:justify-start">
+        <DialogDescription>
+          <div>
+            <h2 className="text-sm font-medium text-gray-600 mt-2">Please select a file to upload</h2>
+            <div className="flex mt-3 gap-2 p-3 rounded-md border border-gray-300 bg-gray-50">
+              <input type="file" accept="application/pdf" onChange={OnFileSelect} className="text-gray-600" />
+            </div>
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-600">File Name *</label>
+              <Input
+                placeholder="Enter file name"
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                className="border border-gray-300 rounded-md"
+              />
+            </div>
+          </div>
+        </DialogDescription>
+        <DialogFooter>
           <DialogClose asChild>
-            <Button type="button" variant="secondary">
-              Close
-            </Button>
+            <Button type="button" className="bg-gray-300 text-black hover:bg-gray-400">Close</Button>
           </DialogClose>
-<<<<<<< HEAD
-          <Button onClick={OnUpload} disabled={loading}>
-            {loading ? <Loader2Icon className="animate-spin" /> : "Upload"}
+          <Button onClick={OnUpload} disabled={loading} className="bg-green-500 text-white hover:bg-green-600">
+            {loading ? <Loader2Icon className="animate-spin text-white" /> : "Upload"}
           </Button>
-=======
-          <Button onClick={OnUpload}>
-            {loading?
-            <Loader2Icon className='animate-spin'/>:'Upload'}
-            
-    </Button>
->>>>>>> 42379ecfe3dfb52e447a90d5ce1e93c54fc098cf
         </DialogFooter>
       </DialogContent>
     </Dialog>
