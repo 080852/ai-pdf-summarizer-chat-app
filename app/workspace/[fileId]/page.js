@@ -21,7 +21,7 @@ function Workspace() {
 
   return (
     <div>
-      <WorkspaceHeader />
+      <WorkspaceHeader fileName={fileInfo?.fileName}/>
       <div className="flex flex-col md:flex-row gap-4 mt-4">
         <div className="flex-1 p-4 bg-gray-100 rounded-md shadow-md">
           <h2 className="text-lg font-semibold">Text Editor</h2>

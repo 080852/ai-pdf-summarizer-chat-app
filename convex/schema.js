@@ -29,4 +29,10 @@ export default defineSchema({
     vectorField: "embedding", // Vector field for similarity search
     dimensions: 768, // Vector dimensions (e.g., 768 or 1536)
   }),
+
+  notes:defineTable({
+    fieldId:v.string(),
+    notes:v.any(),
+    createdBy:v.string()
+  })
 });
