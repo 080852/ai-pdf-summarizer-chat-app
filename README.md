@@ -2,10 +2,12 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 🔗 **Live Demo**: [https://ai-pdf-summarizer-chat-app.vercel.app/](https://ai-pdf-summarizer-chat-app.vercel.app/)
-**Live Demo**   :  (https://ai-pdf-summarizer-chat-app.vercel.app/sign-in?redirect_url=https%3A%2F%2Fai-pdf-summarizer-chat-app.vercel.app%2Fdashboard)
 
 
-             pdf chat demo link   : https://ai-pdf-summarizer-chat-app.vercel.app/workspace/3ff16832-fafa-4097-980f-7f47ab5d9524
+  🔗 **Live Demo**  with pdf loader  :  (https://ai-pdf-summarizer-chat-app.vercel.app/sign-in?redirect_url=https%3A%2F%2Fai-pdf-summarizer-chat-app.vercel.app%2Fdashboard)
+
+[
+             pdf chat demo link   : [https://ai-pdf-summarizer-chat-app.vercel.app/workspace/3ff16832-fafa-4097-980f-7f47ab5d9524](https://ai-pdf-summarizer-chat-app.vercel.app/workspace/6122c618-460e-4742-97ce-5a6d0ccf4219)](https://ai-pdf-summarizer-chat-app.vercel.app/workspace/6122c618-460e-4742-97ce-5a6d0ccf4219)
 
 
 First, run the development server:
