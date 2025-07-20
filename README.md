@@ -5,6 +5,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 **Live Demo**   :  (https://ai-pdf-summarizer-chat-app.vercel.app/sign-in?redirect_url=https%3A%2F%2Fai-pdf-summarizer-chat-app.vercel.app%2Fdashboard)
 
 
+             pdf chat demo link   : https://ai-pdf-summarizer-chat-app.vercel.app/workspace/3ff16832-fafa-4097-980f-7f47ab5d9524
+
 
 First, run the development server:
 
