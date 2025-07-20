@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 🔗 **Live Demo**: [https://ai-pdf-summarizer-chat-app.vercel.app/](https://ai-pdf-summarizer-chat-app.vercel.app/)
+**Live Demo**   :  (https://ai-pdf-summarizer-chat-app.vercel.app/sign-in?redirect_url=https%3A%2F%2Fai-pdf-summarizer-chat-app.vercel.app%2Fdashboard)
+
 
 
 First, run the development server:
